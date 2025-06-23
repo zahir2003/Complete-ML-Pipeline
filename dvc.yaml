@@ -3,8 +3,8 @@ stages:
     cmd: python src/Data_injestion.py
     deps:
       - src/Data_injestion.py
-    # params:
-    #   - Data_injestion.test_size
+    params:
+      - Data_injestion.test_size
     outs:
       - data/raw
 
@@ -16,13 +16,13 @@ stages:
     outs:
       - data/interim
 
-  Feature_engineering:
+  Feature_Engineering:
     cmd: python src/Feature_Engineering.py
     deps:
       - data/interim
       - src/Feature_Engineering.py
-    # params:
-    #   - Feature_engineering.max_features
+    params:
+      - Feature_Engineering.max_features
     outs:
       - data/processed
 
@@ -31,9 +31,9 @@ stages:
     deps:
       - data/processed
       - src/Model_Building.py
-    # params:
-    #   - Model_Building.n_estimators
-    #   - Model_Building.random_state
+    params:
+      - Model_Building.n_estimators
+      - Model_Building.random_state
     outs:
       - models/model.pkl
 

@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import logging
+import yaml
 
 # Ensure the "logs" directory exists
 log_dir = "logs"
@@ -27,6 +28,24 @@ logger.addHandler(console_handler)
 file_handler = logging.FileHandler(log_file_path)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
+
+
+def load_parmas(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s',params_path)
+        return params
+    except FileNotFoundError:
+        logger.error('File not found : %s',params_path)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error : %s',e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error : %s',e)
+        raise
 
 
 def load_data(data_url: str) -> pd.DataFrame:
@@ -73,7 +92,9 @@ def save_data(train_data: pd.DataFrame, test_data: pd.DataFrame, output_path: st
 
 def main():
     try:
-        test_size = 0.21
+        params = load_parmas(params_path='params.yaml')
+        test_size = params['Data_injestion']['test_size']
+        # test_size = 0.21
         # --- IMPROVEMENT: Using more descriptive variable names ---
         data_url = 'https://raw.githubusercontent.com/zahir2003/Datasets/refs/heads/main/spam%202.csv'
         output_path = './data'
