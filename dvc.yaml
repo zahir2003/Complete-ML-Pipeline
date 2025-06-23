@@ -1,0 +1,54 @@
+stages:
+  Data_injestion:
+    cmd: python src/Data_injestion.py
+    deps:
+      - src/Data_injestion.py
+    # params:
+    #   - Data_injestion.test_size
+    outs:
+      - data/raw
+
+  Data_preprocessing:
+    cmd: python src/Data_Preprocessing.py
+    deps:
+      - data/raw
+      - src/Data_Preprocessing.py
+    outs:
+      - data/interim
+
+  Feature_engineering:
+    cmd: python src/Feature_Engineering.py
+    deps:
+      - data/interim
+      - src/Feature_Engineering.py
+    # params:
+    #   - Feature_engineering.max_features
+    outs:
+      - data/processed
+
+  Model_Building:
+    cmd: python src/Model_Building.py
+    deps:
+      - data/processed
+      - src/Model_Building.py
+    # params:
+    #   - Model_Building.n_estimators
+    #   - Model_Building.random_state
+    outs:
+      - models/model.pkl
+
+  Model_Evaluation:
+    cmd: python src/Model_Evaluation.py
+    deps:
+      - models/model.pkl
+      - src/Model_Evaluation.py
+    metrics:
+      - reports/metrics.json
+
+# metrics:
+#   - dvclive/metrics.json
+# plots:
+# - dvclive/plots/metrics:
+#     x: step
+# params:
+#   - dvclive/params.yaml

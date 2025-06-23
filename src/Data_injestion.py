@@ -8,14 +8,14 @@ log_dir = "logs"
 os.makedirs(log_dir, exist_ok=True)
 
 # Logging configuration
-log_file_path = os.path.join(log_dir, 'Data_injection.log')
+log_file_path = os.path.join(log_dir, 'Data_injestion.log')
 
 # --- FIX: Corrected the formatter string ---
 # The original format '%(asctime)%' was incorrect.
 # The correct syntax is '%(asctime)s' to specify the placeholder and its type (string).
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-logger = logging.getLogger('Data_injection')
+logger = logging.getLogger('Data_injestion')
 logger.setLevel('DEBUG')
 
 # Setup console handler
@@ -73,7 +73,7 @@ def save_data(train_data: pd.DataFrame, test_data: pd.DataFrame, output_path: st
 
 def main():
     try:
-        test_size = 0.2
+        test_size = 0.21
         # --- IMPROVEMENT: Using more descriptive variable names ---
         data_url = 'https://raw.githubusercontent.com/zahir2003/Datasets/refs/heads/main/spam%202.csv'
         output_path = './data'
