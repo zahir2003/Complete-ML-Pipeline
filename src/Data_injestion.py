@@ -96,7 +96,7 @@ def main():
         test_size = params['Data_injestion']['test_size']
         # test_size = 0.21
         # --- IMPROVEMENT: Using more descriptive variable names ---
-        data_url = 'https://raw.githubusercontent.com/zahir2003/Datasets/refs/heads/main/spam%202.csv'
+        data_url = 'https://raw.githubusercontent.com/zahir2003/Datasets/main/spam%202.csv'
         output_path = './data'
         
         df = load_data(data_url=data_url)

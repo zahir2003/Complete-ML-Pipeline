@@ -12,5 +12,65 @@ Setting up DVC pipeline (without param):
 Setting up DVC pipeline (With params):
 8. Add params.yaml file.
 9. Add the params setup (mentioned below).
+
+ import yaml
+ def load_parmas(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s',params_path)
+        return params
+    except FileNotFoundError:
+        logger.error('File not found : %s',params_path)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error : %s',e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error : %s',e)
+        raise
+
+    # For Data_injestion in main function
+    params = load_parmas(params_path='params.yaml')
+    test_size = params['Data_injestion']['test_size']
+
+    #For Feature_Engineering in main function
+    params = load_parmas(params_path='params.yaml')
+    max_features = params['Feature_Engineering']['max_features']
+
+    # For Model_Building in main function
+    params = load_parmas(params_path='params.yaml')
+    n_estimators = params["Model_Building"]["n_estimators"]
+    random_state = params["Model_Building"]["random_state"]
+
+     model_params = {
+            "n_estimators": n_estimators,
+            "random_state": random_state
+        }
+
 10. Do "dvc repro" again to test the pipeline along with the params.
 11. Now git add, commit, push.
+
+Experiments with DVC:
+12. pip install dvclive
+13. Add the dvclive code block(mentioned below).
+ 
+ # In Model_Evaluation.py
+ import yaml
+ from dvclive import Live
+ 
+ # In main function
+ # Experiment tracking using dvclive
+        with Live(save_dvc_exp=True) as live:
+            live.log_metric('accuracy',accuracy_score(y_test,y_test))
+            live.log_metric('precision',precision_score(y_test,y_test))
+            live.log_metric('recall',recall_score(y_test,y_test))
+
+            live.log_params(params)
+
+14. Do "dvc exp run",it will create a new dvc.yaml(if already not there) and dvclive directory(each run will be considered as an experiment by DVC).
+15. DO "dvc exp show" on terminal to see the experiments or use extension on VSCode (install dvc extension).
+16. DO "dvc exp remove {exp_name}" to remove exp (optional) | "dvc exp apply {exp_name}" to reproduce prev exp.
+17. Change params, re-run code (produce new experiments)
+18. New git add, commit, push. 
